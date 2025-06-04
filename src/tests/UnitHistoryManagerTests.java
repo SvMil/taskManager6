@@ -23,7 +23,6 @@ class UnitHistoryManagerTests {
         historyManager = new InMemoryHistoryManager();
     }
 
-
     @Test
     void addTaskToHistory() {
         Task task = new Task("Test2", "Test2 addNewTask description");
