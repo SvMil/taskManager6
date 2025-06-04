@@ -2,38 +2,70 @@ package managers;
 
 import tasks.Task;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static final int HISTORY_LIST_SIZE = 10;
+    Map<Integer, Node<Task> > fastHistoryList = new LinkedHashMap<>();
 
-    private ArrayList <Task> historyList = new ArrayList<>();
+    private Node<Task> head;
+    private Node<Task> tail;
+    private int linkedListSize = 0;
 
+    public int linkedListSize() {
+        return this.linkedListSize;
+    }
 
-    @Override
-    public void addTaskToHistory(Task task) {
-        if(historyList.size()==HISTORY_LIST_SIZE){
-            System.out.println("historyList.size()" + historyList.size());
-            ArrayList<Task> bufferHistoryList = new ArrayList<>();
-            for(int i=0; i<HISTORY_LIST_SIZE-1; i++){
-                bufferHistoryList.add(i,historyList.get(i+1));
+    public Node<Task> linkLast(Task element) {
+        final Node<Task> oldTail = tail;
+        final Node<Task> newNode = new Node<>(oldTail, element, null);
+        tail = newNode;
+        if (oldTail == null)
+            tail = newNode;
+        else
+            oldTail.next = newNode;
+        linkedListSize++;
+        return newNode;
+    }
+
+    public void removeLinkedNode(Node <Task> node) {
+            if (node.prev != null) {
+                final Node<Task> prev = node.prev;
+                prev.next = node.next;
             }
-            historyList.clear();
-            historyList = bufferHistoryList;
-        }
-        historyList.add(task);
+            if (node.next != null) {
+                final Node<Task> next = node.next;
+                next.prev = node.prev;
+            }
+
+            linkedListSize--;
     }
 
     @Override
-    public ArrayList <Task>  getHistory() {
+    public void addTaskToHistory(Task task) {
+        if(fastHistoryList.containsKey(task.getId())){
+            removeTaskFromHistory(task.getId());
+        }
+        fastHistoryList.put(task.getId(),linkLast(task));
+    }
 
-        return historyList;
+    @Override
+    public Map<Integer, Node<Task>>  getHistory() {
+
+        return fastHistoryList;
+    }
+
+    @Override
+    public void removeTaskFromHistory(int id) {
+        removeLinkedNode(fastHistoryList.get(id));
+        fastHistoryList.remove(id);
     }
 
     public Integer  getHistorySize() {
 
-        return HISTORY_LIST_SIZE;
+        return linkedListSize;
     }
 
 }

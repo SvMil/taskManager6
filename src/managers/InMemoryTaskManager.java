@@ -1,11 +1,12 @@
 package managers;
 
-import tasks.*;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+import tasks.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -13,7 +14,7 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap <Integer, Task> taskList = new HashMap<>();
     private HashMap <Integer, Epic> epicList = new HashMap<>();
     private HashMap <Integer, SubTask> subTaskList = new HashMap<>();
-    InMemoryHistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    public InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
     private  Integer generateId() { return taskCounter++; }
 
     ////////////// create task/////////////
@@ -152,12 +153,14 @@ public class InMemoryTaskManager implements TaskManager {
                 ArrayList<Integer> epicSubtaskList= epicList.get(id).getSubTasksList();
                 for (Integer sabtaskId:epicSubtaskList){
                     subTaskList.remove(sabtaskId);
+                    inMemoryHistoryManager.removeTaskFromHistory(sabtaskId);
                 }
                 epicList.remove(id);
             }
         }else {
             System.out.println("Задачи с таким id не существует");
         }
+        inMemoryHistoryManager.removeTaskFromHistory(id);
     }
 
     private   void removeSubTaskFromEpic(SubTask newSubTask) {
@@ -270,6 +273,15 @@ public class InMemoryTaskManager implements TaskManager {
         return taskList;
     }
 
+    public Task getTask(Integer id) {
+
+            if(taskList.containsKey(id)){
+                return taskList.get(id);
+            }else{
+                return null;
+            }
+    }
+
     public HashMap<Integer, Epic> getEpicList() {
         return epicList;
     }
@@ -290,10 +302,4 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("У эпика " + id + " нет сабтасок");
         }
     }
-
-    @Override
-    public List<Task> getHistory(){
-    return inMemoryHistoryManager.getHistory();
-    }
-
 }

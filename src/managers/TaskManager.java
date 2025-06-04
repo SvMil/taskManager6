@@ -3,9 +3,6 @@ package managers;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tasks.TaskStatus;
-
-import java.util.List;
 
 public interface TaskManager {
     ////////////// create task/////////////
@@ -40,5 +37,4 @@ public interface TaskManager {
 
     void getEpicSubTasks(Integer id);
 
-    List<Task> getHistory();
 }

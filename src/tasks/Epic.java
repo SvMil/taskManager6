@@ -1,6 +1,6 @@
 package tasks;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class Epic  extends Task {
     private ArrayList<Integer> subTasksList;
