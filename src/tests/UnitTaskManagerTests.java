@@ -1,17 +1,16 @@
 package tests;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import managers.InMemoryHistoryManager;
 import managers.InMemoryTaskManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 class UnitTaskManagerTests {
@@ -77,7 +76,7 @@ class UnitTaskManagerTests {
         taskManager.removeTask(subTask2.getId());
         subTaskEpic1Count = epic1.getSubTasksList().size();
         assertEquals(1, subTaskEpic1Count, "Неверное количество сабтасок в эпике 1.");
-         }
+    }
 
     @Test
     void deleteEpic() {

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    Map<Integer, Node<Task> > fastHistoryList = new LinkedHashMap<>();
+    private Map<Integer, Node<Task> > fastHistoryList = new LinkedHashMap<>();
 
     private Node<Task> head;
     private Node<Task> tail;
