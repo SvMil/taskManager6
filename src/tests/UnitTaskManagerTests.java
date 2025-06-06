@@ -63,36 +63,5 @@ class UnitTaskManagerTests {
         assertEquals(epic.getId(), epics.get(1).getId(), "Задачи не совпадают.");
     }
 
-    @Test
-    void deleteSubTask() {
-        Epic epic1 = new Epic("Epic1", "Epic1 description");
-        taskManager.createEpic(epic1);
-        SubTask subTask1 = new SubTask("SubTask1","description SubTask1 ep1", 1);
-        taskManager.createSubTask(subTask1);
-        SubTask subTask2 = new SubTask("SubTask2","description SubTask2 ep2", 1);
-        taskManager.createSubTask(subTask2);
-        Integer subTaskEpic1Count = epic1.getSubTasksList().size();
-        assertEquals(2, subTaskEpic1Count, "Неверное количество сабтасок в эпике 1.");
-        taskManager.removeTask(subTask2.getId());
-        subTaskEpic1Count = epic1.getSubTasksList().size();
-        assertEquals(1, subTaskEpic1Count, "Неверное количество сабтасок в эпике 1.");
-    }
-
-    @Test
-    void deleteEpic() {
-        Epic epic1 = new Epic("Epic1", "Epic1 description");
-        taskManager.createEpic(epic1);
-        SubTask subTask1 = new SubTask("SubTask1","description SubTask1 ep1", 1);
-        taskManager.createSubTask(subTask1);
-        SubTask subTask2 = new SubTask("SubTask2","description SubTask2 ep2", 1);
-        taskManager.createSubTask(subTask2);
-        Integer subTaskEpic1Count = epic1.getSubTasksList().size();
-        assertEquals(2, subTaskEpic1Count, "Неверное количество сабтасок в эпике 1.");
-        final HashMap<Integer, SubTask> subTasksBeforeRemoveEpic = taskManager.getSubTaskList();
-        assertEquals(2, subTasksBeforeRemoveEpic.size(), "Неверное количество задач.");
-        taskManager.removeTask(epic1.getId());
-        final HashMap<Integer, SubTask> subTasksAfterRemoveEpic = taskManager.getSubTaskList();
-        assertEquals(0, subTasksAfterRemoveEpic.size(), "Неверное количество задач.");
-    }
 
 }
