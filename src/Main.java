@@ -1,5 +1,6 @@
 import managers.InMemoryTaskManager;
 
+import managers.Managers;
 import managers.Node;
 import tasks.*;
 
@@ -12,6 +13,8 @@ public class Main {
 
     public static void main(String[] args) {
         inMemoryTaskManager = new InMemoryTaskManager();
+        //Managers Manager = new Managers();
+       //inMemoryTaskManager = Managers.getDefault();
         scanner = new Scanner(System.in);
 
         Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
