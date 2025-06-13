@@ -7,6 +7,7 @@ import tasks.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class InMemoryTaskManager implements TaskManager {
@@ -301,5 +302,11 @@ public class InMemoryTaskManager implements TaskManager {
         }else {
             System.out.println("У эпика " + id + " нет сабтасок");
         }
+    }
+
+    @Override
+    public List getHistory(){
+        return inMemoryHistoryManager.getHistory();
+
     }
 }

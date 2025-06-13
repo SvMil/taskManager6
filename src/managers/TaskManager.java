@@ -4,6 +4,8 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.util.List;
+
 public interface TaskManager {
     ////////////// create task/////////////
     void createTask(Task newTask);
@@ -36,5 +38,7 @@ public interface TaskManager {
     boolean getAnyTaskById(Integer id);
 
     void getEpicSubTasks(Integer id);
+
+    List getHistory();
 
 }

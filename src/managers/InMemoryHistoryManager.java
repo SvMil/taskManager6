@@ -2,7 +2,9 @@ package managers;
 
 import tasks.Task;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -52,15 +54,21 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public Map<Integer, Node<Task>>  getHistory() {
+    public List<Node<Task>> getHistory() {
+        List<Node<Task>> historyList = new ArrayList<>();
 
-        return fastHistoryList;
+        for (Integer key : fastHistoryList.keySet()) {
+            historyList.add(fastHistoryList.get(key));
+        }
+        return historyList;
     }
 
     @Override
     public void removeTaskFromHistory(int id) {
-        removeLinkedNode(fastHistoryList.get(id));
-        fastHistoryList.remove(id);
+        if(!fastHistoryList.isEmpty()){
+            removeLinkedNode(fastHistoryList.get(id));
+            fastHistoryList.remove(id);
+        }
     }
 
     public Integer  getHistorySize() {

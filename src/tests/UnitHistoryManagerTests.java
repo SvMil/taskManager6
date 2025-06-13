@@ -9,7 +9,9 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +35,7 @@ class UnitHistoryManagerTests {
     @Test
     void addTaskToHistory() {
         Task task = new Task("Test2", "Test2 addNewTask description");
-        Map<Integer, Node<Task>> history = new LinkedHashMap<>();
+        List<Node<Task>> history = new ArrayList<>();
         assertEquals(0, history.size(), "История пустая.");
         historyManager.addTaskToHistory(task);
         history = historyManager.getHistory();
