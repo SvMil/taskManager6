@@ -62,9 +62,8 @@ public class Main {
         for (Node<Task> task : fastHistoryList) {
             System.out.println(task.data.getId() + " " + task.data.toString());
         }
-      //  System.out.println("Удалить эпик 1");
-     //   inMemoryTaskManager.removeTask(epic1.getId());
-        inMemoryTaskManager.removeTask(2);
+        System.out.println("Удалить эпик 1");
+        inMemoryTaskManager.removeTask(epic1.getId());
 
         System.out.println("Повторно вывести историю просмотров");
         fastHistoryList = inMemoryTaskManager.getHistory();
