@@ -2,6 +2,7 @@ package managers;
 
 import tasks.Task;
 
+import java.util.List;
 import java.util.Map;
 
 public interface HistoryManager {
@@ -9,5 +10,5 @@ public interface HistoryManager {
 
     void removeTaskFromHistory(int id);
 
-    Map<Integer, Node<Task>> getHistory();
+    List<Node<Task>> getHistory();
 }

@@ -4,6 +4,7 @@ import managers.Managers;
 import managers.Node;
 import tasks.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -15,6 +16,7 @@ public class Main {
         inMemoryTaskManager = new InMemoryTaskManager();
         //Managers Manager = new Managers();
        //inMemoryTaskManager = Managers.getDefault();
+        //если создавать через Managers то это будет выглядеть как-то так? (это фейковая строка для реквеста)
         scanner = new Scanner(System.in);
 
         Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
@@ -56,19 +58,17 @@ public class Main {
 
         System.out.println("Получить историю просмотров");
 
-        Map<Integer, Node<Task>> fastHistoryList = inMemoryTaskManager.inMemoryHistoryManager.getHistory();
-        for (Integer key : fastHistoryList.keySet()) {
-            Node<Task> value = fastHistoryList.get(key);
-            System.out.println("Id: " + key + ", TaskInfo: " + value.data.toString());
+        List<Node<Task>> fastHistoryList = inMemoryTaskManager.getHistory();
+        for (Node<Task> task : fastHistoryList) {
+            System.out.println(task.data.getId() + " " + task.data.toString());
         }
         System.out.println("Удалить эпик 1");
         inMemoryTaskManager.removeTask(epic1.getId());
 
         System.out.println("Повторно вывести историю просмотров");
-        fastHistoryList = inMemoryTaskManager.inMemoryHistoryManager.getHistory();
-        for (Integer key : fastHistoryList.keySet()) {
-            Node<Task> value = fastHistoryList.get(key);
-            System.out.println("Id: " + key + ", TaskInfo: " + value.data.toString());
+        fastHistoryList = inMemoryTaskManager.getHistory();
+        for (Node<Task> task : fastHistoryList) {
+            System.out.println(task.data.getId() + " " + task.data.toString());
         }
     }
 }
