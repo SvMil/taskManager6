@@ -4,9 +4,29 @@ import managers.Managers;
 import managers.Node;
 import tasks.*;
 
+import java.io.FileWriter;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.IOException.*;
+import java.io.*;
+import java.io.Writer;
+import java.io.BufferedReader;
+import java.io.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
 
 public class Main {
     static InMemoryTaskManager inMemoryTaskManager;
@@ -69,6 +89,15 @@ public class Main {
         fastHistoryList = inMemoryTaskManager.getHistory();
         for (Node<Task> task : fastHistoryList) {
             System.out.println(task.data.getId() + " " + task.data.toString());
+        }
+        Path path = Paths.get("/Users/milovidova.s.e/Downloads/testFile.txt");
+        //Writer fileWriter = new FileWriter("filewriter.txt", true);
+
+        try (Writer fileWriter = new FileWriter("filewriter.txt", true)) {
+            fileWriter.write("новая запись в новый файл\n");
+            fileWriter.write("добавляем текст");
+        }catch (IOException e){
+            System.out.println("Произошла ошибка во время записи файла.");
         }
     }
 }

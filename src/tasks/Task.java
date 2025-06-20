@@ -23,6 +23,13 @@ public class Task {
         this.taskStatus = TaskStatus.NEW;
     }
 
+    public Task(Integer id, String name, TaskStatus taskStatus, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -31,6 +38,11 @@ public class Task {
                 ", id=" + id +
                 ", taskStatus=" + taskStatus +
                 '}';
+    }
+
+
+    public String writeToString() {
+        return id + "," + getClass() + "," + name + "," + taskStatus + "," + description;
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
