@@ -1,5 +1,7 @@
 package tasks;
 
+import managers.TaskType;
+
 import java.util.ArrayList;
 
 public class SubTask extends Task {
@@ -25,19 +27,8 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                "parentEpicId=" + parentEpicId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", taskStatus=" + taskStatus +
-                '}';
+        return id + "," + TaskType.SUBTASK + "," + name + "," + taskStatus + "," + description + "," + parentEpicId;
     }
-
-    public String writeToString() {
-        return id + "," + this.getClass().toString() + "," + name + "," + taskStatus + "," + description + "," + parentEpicId;
-    }
-
 
     public void setStatus(TaskStatus status){
         this.taskStatus = status;

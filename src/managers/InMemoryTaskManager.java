@@ -15,8 +15,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap <Integer, Task> taskList = new HashMap<>();
     protected HashMap <Integer, Epic> epicList = new HashMap<>();
     protected HashMap <Integer, SubTask> subTaskList = new HashMap<>();
-    public InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-    protected  Integer generateId() { return taskCounter++; }
+    protected InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+    private  Integer generateId() { return taskCounter++; }
 
     ////////////// create task/////////////
     @Override
@@ -109,7 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     ////////////// epicStatusControl ///////////
 
-    private void epicStatusControl(Integer epicId) {
+    protected void epicStatusControl(Integer epicId) {
        Integer newTaskCount = 0;
        Integer doneTaskCount = 0;
         Epic epic= epicList.get(epicId);
@@ -194,7 +194,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void getAllTasks(){
         if (taskList != null&&!taskList.isEmpty()){
-         //   System.out.println("Все задачи с типом Tasks.Task:");
             for(Task task: taskList.values()){
                 System.out.println(task.toString());
             }

@@ -6,6 +6,8 @@ import tasks.Task;
 import tasks.TaskStatus;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -30,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Epic epic2 = new Epic("Эпик 2", "Нужно сделать");
         fileBackedTaskManager.createEpic(epic2);
 
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile();
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName,"newManagerFile.csv");
         fileBackedTaskManager2.getAllTasks();
     }
 
@@ -49,6 +51,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void createEpic(Epic newEpic) {
         super.createTask(newEpic);
         saveToFile();
+    }
+    public String getFileName(){
+        return fileName;
+    }
+
+    @Override
+    public SubTask getSubTaskById(Integer id) {
+        return super.getSubTaskById(id);
     }
 
     @Override
@@ -87,11 +97,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         saveToFile();
     }
 
-    public void save() {
-        System.out.println("сохранить в файл");
+    public static void copySourceFile(String sourceFile, String destFile){
+
+        Path sourcePath = Paths.get(sourceFile);
+        Path destPath = Paths.get(destFile);
+
+        try {
+            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File is copied successful!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public ArrayList<String> readFromFile() {
+    public static ArrayList<String> readFromFile(String fileName) {
         System.out.println("чтение из файла");
         ArrayList<String> readAllFromFile = new ArrayList<String>();
         try {
@@ -113,19 +132,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return readAllFromFile;
     }
 
-    public FileBackedTaskManager loadFromFile() {
+    public static FileBackedTaskManager loadFromFile(String sourceFile, String newManagerFile) {
         System.out.println("создать FileBackedTaskManager загрузкой из файла");
-        ArrayList<String> readAllFromFile = readFromFile();
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(fileName);
+        copySourceFile(sourceFile, newManagerFile);
+        ArrayList<String> readAllFromFile = readFromFile(sourceFile);
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(newManagerFile);
         for (String str : readAllFromFile) {
             String[] split = str.split(",");
-            if (split[1].equals("class tasks.Epic")) {
+            if (split[1].equals(TaskType.EPIC)) {
                 Epic epic = new Epic(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
                 fileBackedTaskManager.createEpic(epic);
-            } else if (split[1].equals("class tasks.Task")) {
+            } else if (split[1].equals(TaskType.TASK)) {
                 Task task = new Task(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
                 fileBackedTaskManager.createTask(task);
-            } else if (split[1].equals("class tasks.SubTask")) {
+            } else if (split[1].equals(TaskType.SUBTASK)) {
                 SubTask subTask = new SubTask(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4], Integer.parseInt(split[5]));
                 fileBackedTaskManager.createSubTask(subTask);
             }
@@ -133,22 +153,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-    public void saveToFile() {
-        // try (Writer fileWriter = new FileWriter("filewriterall.csv", true)) {
+
+    private void saveToFile() {
         try (Writer fileWriter = new FileWriter(fileName)) {
             if (taskList != null && !taskList.isEmpty()) {
                 for (Task task : taskList.values()) {
-                    fileWriter.write(task.writeToString() + "\n");
+                    fileWriter.write(task.toString() + "\n");
                 }
             } else if (epicList != null && !epicList.isEmpty()) {
                 System.out.println("Все задачи с типом Tasks.Epic:");
                 for (Epic epic : epicList.values()) {
-                    fileWriter.write(epic.writeToString() + "\n");
+                    fileWriter.write(epic.toString() + "\n");
                 }
             } else if (subTaskList != null && !subTaskList.isEmpty()) {
                 System.out.println("Все задачи с типом Tasks.SubTask:");
                 for (SubTask subTask : subTaskList.values()) {
-                    fileWriter.write(subTask.writeToString() + "\n");
+                    fileWriter.write(subTask.toString() + "\n");
                 }
             } else {
                 System.out.println("В системе нет зарегистрированных задач");
