@@ -10,9 +10,7 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -91,17 +89,17 @@ class UnitHistoryManagerTests {
         Epic epic2 = new Epic("Эпик 2","Нужно сделать");
         taskManager.createEpic(epic2);
 
-        taskManager.inMemoryHistoryManager.addTaskToHistory(epic1);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(subtask1);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(subtask2);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(epic1);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(epic1);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(subtask1);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(epic2);
-        taskManager.inMemoryHistoryManager.addTaskToHistory(subtask1);
+        taskManager.getAnyTaskById(1);
+        taskManager.getAnyTaskById(2);
+        taskManager.getAnyTaskById(3);
+        taskManager.getAnyTaskById(1);
+        taskManager.getAnyTaskById(1);
+        taskManager.getAnyTaskById(2);
+        taskManager.getAnyTaskById(4);
+        taskManager.getAnyTaskById(2);
 
-        assertEquals(taskManager.inMemoryHistoryManager.getHistorySize(), 4, " 4 элемента должно быть в истории  до удаления");
+        assertEquals(taskManager.getHistory().size(), 4, " 4 элемента должно быть в истории  до удаления");
         taskManager.removeTask(epic1.getId());
-        assertEquals(taskManager.inMemoryHistoryManager.getHistorySize(), 1, " 3 элемента должно быть в истории  до удаления");
+        assertEquals(taskManager.getHistory().size(), 1, " 3 элемента должно быть в истории  до удаления");
     }
 }

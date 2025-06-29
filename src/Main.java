@@ -1,11 +1,9 @@
 import managers.InMemoryTaskManager;
 
-import managers.Managers;
 import managers.Node;
 import tasks.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -70,5 +68,8 @@ public class Main {
         for (Node<Task> task : fastHistoryList) {
             System.out.println(task.data.getId() + " " + task.data.toString());
         }
+
+        System.out.println("Получить все таски");
+        inMemoryTaskManager.getAllTasks();
     }
 }

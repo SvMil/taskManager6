@@ -11,11 +11,11 @@ import java.util.List;
 
 
 public class InMemoryTaskManager implements TaskManager {
-    private Integer taskCounter = 1;
-    private HashMap <Integer, Task> taskList = new HashMap<>();
-    private HashMap <Integer, Epic> epicList = new HashMap<>();
-    private HashMap <Integer, SubTask> subTaskList = new HashMap<>();
-    public InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+    protected Integer taskCounter = 1;
+    protected HashMap <Integer, Task> taskList = new HashMap<>();
+    protected HashMap <Integer, Epic> epicList = new HashMap<>();
+    protected HashMap <Integer, SubTask> subTaskList = new HashMap<>();
+    protected InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
     private  Integer generateId() { return taskCounter++; }
 
     ////////////// create task/////////////
@@ -109,7 +109,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     ////////////// epicStatusControl ///////////
 
-    private void epicStatusControl(Integer epicId) {
+    protected void epicStatusControl(Integer epicId) {
        Integer newTaskCount = 0;
        Integer doneTaskCount = 0;
         Epic epic= epicList.get(epicId);
@@ -194,18 +194,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void getAllTasks(){
         if (taskList != null&&!taskList.isEmpty()){
-            System.out.println("Все задачи с типом Tasks.Task:");
             for(Task task: taskList.values()){
                 System.out.println(task.toString());
             }
         }
-        if (epicList != null&&!epicList.isEmpty()){
+        else if (epicList != null&&!epicList.isEmpty()){
             System.out.println("Все задачи с типом Tasks.Epic:");
             for(Epic epic: epicList.values()){
                 System.out.println(epic.toString());
             }
         }
-        if (subTaskList != null&&!subTaskList.isEmpty()){
+        else if (subTaskList != null&&!subTaskList.isEmpty()){
             System.out.println("Все задачи с типом Tasks.SubTask:");
             for(SubTask subTask: subTaskList.values()){
                 System.out.println(subTask.toString());
