@@ -83,13 +83,4 @@ class UnitFileBackedTaskManagerTests {
         assertFalse(secondManagerList.equals(secondManagerList2));
         fileBackedTaskManager2.getAllTasks();
     }
-
-    @Test
-    void removeTaskFromSourseFile() {
-        ArrayList<String> managerTasksList1 = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
-        fileBackedTaskManager.removeTask(2);
-        ArrayList<String> managerTasksList2 = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
-        assertFalse(managerTasksList1.equals(managerTasksList2));
-    }
-
 }

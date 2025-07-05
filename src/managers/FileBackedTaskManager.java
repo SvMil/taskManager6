@@ -9,9 +9,14 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     protected String fileName;
+    protected HashMap<Integer, TaskType> generalList = new HashMap<>();
+    private Integer generalCounter  = 1;
+
 
     public static void main(String[] args) {
 
@@ -33,7 +38,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         fileBackedTaskManager.createEpic(epic2);
 
         FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName,"newManagerFile.csv");
-        fileBackedTaskManager2.getAllTasks();
+        fileBackedTaskManager.getAllTasks();
+
     }
 
     public FileBackedTaskManager(String fileName) {
@@ -44,26 +50,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void createTask(Task newTask) {
         super.createTask(newTask);
+        generalList.put(generateGeneralListId(),TaskType.TASK);
         saveToFile();
     }
 
+    private  Integer generateGeneralListId() { return generalCounter++; }
+
     @Override
     public void createEpic(Epic newEpic) {
-        super.createTask(newEpic);
+        super.createEpic(newEpic);
+        generalList.put(generateGeneralListId(),TaskType.EPIC);
         saveToFile();
     }
     public String getFileName(){
         return fileName;
     }
 
-    @Override
-    public SubTask getSubTaskById(Integer id) {
-        return super.getSubTaskById(id);
-    }
 
     @Override
     public void createSubTask(SubTask newSubTask) {
-        super.createTask(newSubTask);
+        super.createSubTask(newSubTask);
+        generalList.put(generateGeneralListId(),TaskType.SUBTASK);
+        saveToFile();
+    }
+
+    @Override
+    protected void epicStatusControl(Integer epicId) {
+        super.epicStatusControl(epicId);
+        saveToFile();
+    }
+
+    @Override
+    protected void addSubTaskToEpic(SubTask newSubTask) {
+        super.addSubTaskToEpic(newSubTask);
         saveToFile();
     }
 
@@ -82,18 +101,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void updateSubTask(SubTask newSubTask) {
         super.updateSubTask(newSubTask);
-        saveToFile();
-    }
-
-    @Override
-    public void removeTask(Integer id) {
-        super.removeTask(id);
-        saveToFile();
-    }
-
-    @Override
-    public void removeAllTasks() {
-        super.removeAllTasks();
         saveToFile();
     }
 
@@ -134,47 +141,47 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(String sourceFile, String newManagerFile) {
         System.out.println("создать FileBackedTaskManager загрузкой из файла");
-        copySourceFile(sourceFile, newManagerFile);
+        //copySourceFile(sourceFile, newManagerFile);
         ArrayList<String> readAllFromFile = readFromFile(sourceFile);
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(newManagerFile);
+        FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(newManagerFile);
         for (String str : readAllFromFile) {
             String[] split = str.split(",");
-            if (split[1].equals(TaskType.EPIC)) {
+            //System.out.println("loadFromFile split[1] " + split[1]);
+            if (split[1].equals("EPIC")) {
                 Epic epic = new Epic(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
-                fileBackedTaskManager.createEpic(epic);
-            } else if (split[1].equals(TaskType.TASK)) {
+                fileBackedTaskManager2.createEpic(epic);
+            } if (split[1].equals("TASK")) {
                 Task task = new Task(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
-                fileBackedTaskManager.createTask(task);
-            } else if (split[1].equals(TaskType.SUBTASK)) {
+                fileBackedTaskManager2.createTask(task);
+            } if (split[1].equals("SUBTASK")) {
                 SubTask subTask = new SubTask(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4], Integer.parseInt(split[5]));
-                fileBackedTaskManager.createSubTask(subTask);
+                fileBackedTaskManager2.createSubTask(subTask);
             }
         }
-        return fileBackedTaskManager;
+        return fileBackedTaskManager2;
     }
-
 
     private void saveToFile() {
         try (Writer fileWriter = new FileWriter(fileName)) {
-            if (taskList != null && !taskList.isEmpty()) {
-                for (Task task : taskList.values()) {
-                    fileWriter.write(task.toString() + "\n");
+            for (Map.Entry<Integer,TaskType> entry : generalList.entrySet()) {
+                Integer id = entry.getKey();
+                TaskType taskType = entry.getValue();
+
+                switch (taskType.toString()){
+                    case "TASK":
+                        fileWriter.write(getTaskById(id).toString() + "\n");
+                        break;
+                    case "EPIC":
+                        fileWriter.write(getEpicById(id).toString() + "\n");
+                        break;
+                    case "SUBTASK":
+                        fileWriter.write(getSubTaskById(id).toString() + "\n");
+                        break;
                 }
-            } else if (epicList != null && !epicList.isEmpty()) {
-                System.out.println("Все задачи с типом Tasks.Epic:");
-                for (Epic epic : epicList.values()) {
-                    fileWriter.write(epic.toString() + "\n");
-                }
-            } else if (subTaskList != null && !subTaskList.isEmpty()) {
-                System.out.println("Все задачи с типом Tasks.SubTask:");
-                for (SubTask subTask : subTaskList.values()) {
-                    fileWriter.write(subTask.toString() + "\n");
-                }
-            } else {
-                System.out.println("В системе нет зарегистрированных задач");
             }
         } catch (IOException e) {
             System.out.println("Произошла ошибка во время записи файла.");
         }
+
     }
 }

@@ -21,7 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
     ////////////// create task/////////////
     @Override
     public void createTask(Task newTask) {
-        newTask.setId(generateId());
+            newTask.setId(generateId());
         if (taskList == null) {
             taskList = new HashMap<>();
         }
@@ -95,10 +95,11 @@ public class InMemoryTaskManager implements TaskManager {
             }
     }
 
-    private void addSubTaskToEpic(SubTask newSubTask) {
+    protected void addSubTaskToEpic(SubTask newSubTask) {
         ArrayList <Integer> epicSubtaskList;
         if (epicList.get(newSubTask.getParentEpicId()).getSubTasksList() != null&& epicList.get(newSubTask.getParentEpicId()).getSubTasksList().isEmpty() != true) {
             epicSubtaskList = epicList.get(newSubTask.getParentEpicId()).getSubTasksList();
+
         }else {
             epicSubtaskList = new ArrayList<>();
         }
@@ -140,7 +141,7 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("removeTask");
         if (taskList != null && taskList.get(id)!=null){
             taskList.remove(id);
-        }else if (subTaskList != null && subTaskList.get(id)!=null){
+        }if (subTaskList != null && subTaskList.get(id)!=null){
             if(subTaskList.get(id) != null)
             {
                 Integer subTaskParentId = subTaskList.get(id).getParentEpicId();
@@ -148,7 +149,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subTaskList.remove(id);
                 epicStatusControl(subTaskParentId);
             }
-        }else if (epicList != null && epicList.get(id)!=null){
+        }if (epicList != null && epicList.get(id)!=null){
             if(epicList.get(id) != null)
             {
                 ArrayList<Integer> epicSubtaskList= epicList.get(id).getSubTasksList();
@@ -164,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
         inMemoryHistoryManager.removeTaskFromHistory(id);
     }
 
-    private   void removeSubTaskFromEpic(SubTask newSubTask) {
+    protected    void removeSubTaskFromEpic(SubTask newSubTask) {
         ArrayList <Integer> epicSubtaskList;
         if (epicList.get(newSubTask.getParentEpicId()).getSubTasksList() != null) {
             epicSubtaskList = epicList.get(newSubTask.getParentEpicId()).getSubTasksList();
@@ -198,13 +199,13 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println(task.toString());
             }
         }
-        else if (epicList != null&&!epicList.isEmpty()){
+        if (epicList != null&&!epicList.isEmpty()){
             System.out.println("Все задачи с типом Tasks.Epic:");
             for(Epic epic: epicList.values()){
                 System.out.println(epic.toString());
             }
         }
-        else if (subTaskList != null&&!subTaskList.isEmpty()){
+        if (subTaskList != null&&!subTaskList.isEmpty()){
             System.out.println("Все задачи с типом Tasks.SubTask:");
             for(SubTask subTask: subTaskList.values()){
                 System.out.println(subTask.toString());
