@@ -37,7 +37,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Epic epic2 = new Epic("Эпик 2", "Нужно сделать");
         fileBackedTaskManager.createEpic(epic2);
 
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName,"newManagerFile.csv");
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName);
         fileBackedTaskManager.getAllTasks();
 
     }
@@ -104,6 +104,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         saveToFile();
     }
 
+
     public static void copySourceFile(String sourceFile, String destFile){
 
         Path sourcePath = Paths.get(sourceFile);
@@ -139,11 +140,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return readAllFromFile;
     }
 
-    public static FileBackedTaskManager loadFromFile(String sourceFile, String newManagerFile) {
+    public static FileBackedTaskManager loadFromFile(String sourceFile) {
         System.out.println("создать FileBackedTaskManager загрузкой из файла");
         //copySourceFile(sourceFile, newManagerFile);
         ArrayList<String> readAllFromFile = readFromFile(sourceFile);
-        FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(newManagerFile);
+        FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(sourceFile);
         for (String str : readAllFromFile) {
             String[] split = str.split(",");
             //System.out.println("loadFromFile split[1] " + split[1]);
