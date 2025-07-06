@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    protected String fileName;
-    protected HashMap<Integer, TaskType> generalList = new HashMap<>();
+    private String fileName;
+    private HashMap<Integer, TaskType> generalList = new HashMap<>();
     private Integer generalCounter  = 1;
 
 
@@ -104,20 +104,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         saveToFile();
     }
 
-
-    private static void copySourceFile(String sourceFile, String destFile){
-
-        Path sourcePath = Paths.get(sourceFile);
-        Path destPath = Paths.get(destFile);
-
-        try {
-            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File is copied successful!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static ArrayList<String> readFromFile(String fileName) {
         System.out.println("чтение из файла");
         ArrayList<String> readAllFromFile = new ArrayList<String>();
@@ -142,12 +128,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(String sourceFile) {
         System.out.println("создать FileBackedTaskManager загрузкой из файла");
-        //copySourceFile(sourceFile, newManagerFile);
         ArrayList<String> readAllFromFile = readFromFile(sourceFile);
         FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(sourceFile);
         for (String str : readAllFromFile) {
             String[] split = str.split(",");
-            //System.out.println("loadFromFile split[1] " + split[1]);
             if (split[1].equals("EPIC")) {
                 Epic epic = new Epic(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
                 fileBackedTaskManager2.createEpic(epic);
@@ -164,6 +148,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void saveToFile() {
         try (Writer fileWriter = new FileWriter(fileName)) {
+            fileWriter.write("id,type,name,description,status,epic\n");
             for (Map.Entry<Integer,TaskType> entry : generalList.entrySet()) {
                 Integer id = entry.getKey();
                 TaskType taskType = entry.getValue();

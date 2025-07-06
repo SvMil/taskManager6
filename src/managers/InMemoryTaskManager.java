@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class InMemoryTaskManager implements TaskManager {
     protected Integer taskCounter = 1;
     protected HashMap <Integer, Task> taskList = new HashMap<>();
@@ -133,7 +132,9 @@ public class InMemoryTaskManager implements TaskManager {
         }else{
             epic.setTaskStatus(TaskStatus.IN_PROGRESS);
         }
+
     }
+
 
    //////////// remove ////////////
    @Override
@@ -270,7 +271,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public HashMap<Integer, Task> getTaskList() {
+    public HashMap<Integer, Task> getTaskHashMap() {
         return taskList;
     }
 
@@ -283,7 +284,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
     }
 
-    public HashMap<Integer, Epic> getEpicList() {
+    public HashMap<Integer, Epic> getEpicHashMap() {
         return epicList;
     }
 

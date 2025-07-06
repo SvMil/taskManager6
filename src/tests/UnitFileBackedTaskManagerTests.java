@@ -53,8 +53,8 @@ class UnitFileBackedTaskManagerTests {
         fileBackedTaskManager.createTask(task2);
         ArrayList<String> managerTasksList2 = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
         assertFalse(managerTasksList1.equals(managerTasksList2));
-        assertEquals(managerTasksList1.size(),5);
-        assertEquals(managerTasksList2.size(),6);
+        assertEquals(managerTasksList1.size(),6);
+        assertEquals(managerTasksList2.size(),7);
         fileBackedTaskManager.getAllTasks();
     }
 
@@ -83,10 +83,10 @@ class UnitFileBackedTaskManagerTests {
         assertTrue(firstManagerList2.equals(secondManagerList2));
         assertFalse(firstManagerList.equals(firstManagerList2));
         assertFalse(secondManagerList.equals(secondManagerList2));
-        assertEquals(firstManagerList.size(),5);
-        assertEquals(firstManagerList2.size(),6);
-        assertEquals(secondManagerList.size(),5);
-        assertEquals(secondManagerList2.size(),6);
+        assertEquals(firstManagerList.size(),6);
+        assertEquals(firstManagerList2.size(),7);
+        assertEquals(secondManagerList.size(),6);
+        assertEquals(secondManagerList2.size(),7);
         fileBackedTaskManager2.getAllTasks();
     }
 }

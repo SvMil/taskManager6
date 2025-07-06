@@ -12,9 +12,6 @@ public class Main {
 
     public static void main(String[] args) {
         inMemoryTaskManager = new InMemoryTaskManager();
-        //Managers Manager = new Managers();
-       //inMemoryTaskManager = Managers.getDefault();
-        //если создавать через Managers то это будет выглядеть как-то так? (это фейковая строка для реквеста)
         scanner = new Scanner(System.in);
 
         Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
