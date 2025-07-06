@@ -105,7 +105,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    public static void copySourceFile(String sourceFile, String destFile){
+    private static void copySourceFile(String sourceFile, String destFile){
 
         Path sourcePath = Paths.get(sourceFile);
         Path destPath = Paths.get(destFile);
