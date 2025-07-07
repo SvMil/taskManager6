@@ -1,5 +1,7 @@
 package tasks;
 
+import managers.TaskType;
+
 import java.util.Objects;
 
 public class Task {
@@ -23,14 +25,16 @@ public class Task {
         this.taskStatus = TaskStatus.NEW;
     }
 
+    public Task(Integer id, String name, TaskStatus taskStatus, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+    }
+
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", taskStatus=" + taskStatus +
-                '}';
+        return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description;
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {

@@ -37,7 +37,7 @@ class UnitTaskManagerTests {
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task.getId(), savedTask.getId(), "Задачи не совпадают.");
 
-        final HashMap<Integer, Task> tasks = taskManager.getTaskList();
+        final HashMap<Integer, Task> tasks = taskManager.getTaskHashMap();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
@@ -56,7 +56,7 @@ class UnitTaskManagerTests {
         assertNotNull(savedEpic, "Задача не найдена.");
         assertEquals(epic.getId(), savedEpic.getId(), "Задачи не совпадают.");
 
-        final HashMap<Integer, Epic> epics = taskManager.getEpicList();
+        final HashMap<Integer, Epic> epics = taskManager.getEpicHashMap();
 
         assertNotNull(epics, "Задачи не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество задач.");

@@ -1,11 +1,9 @@
 import managers.InMemoryTaskManager;
 
-import managers.Managers;
 import managers.Node;
 import tasks.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -14,9 +12,6 @@ public class Main {
 
     public static void main(String[] args) {
         inMemoryTaskManager = new InMemoryTaskManager();
-        //Managers Manager = new Managers();
-       //inMemoryTaskManager = Managers.getDefault();
-        //если создавать через Managers то это будет выглядеть как-то так? (это фейковая строка для реквеста)
         scanner = new Scanner(System.in);
 
         Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
@@ -70,5 +65,8 @@ public class Main {
         for (Node<Task> task : fastHistoryList) {
             System.out.println(task.data.getId() + " " + task.data.toString());
         }
+
+        System.out.println("Получить все таски");
+        inMemoryTaskManager.getAllTasks();
     }
 }
