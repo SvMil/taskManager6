@@ -5,6 +5,7 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TaskStatus;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
     ////////////// create task/////////////
     @Override
     public void createTask(Task newTask) {
-            newTask.setId(generateId());
+        newTask.setId(generateId());
         if (taskList == null) {
             taskList = new HashMap<>();
         }
@@ -51,14 +52,14 @@ public class InMemoryTaskManager implements TaskManager {
     ///////////////update task//////////////////
     @Override
     public void updateTask(Task newTask) {
-         if (taskList != null && taskList.get(newTask.getId())!=null) {
-             Task task = taskList.get(newTask.getId());
-             task.setName(newTask.getName());
-             task.setDescription(newTask.getDescription());
-             task.setTaskStatus(newTask.getTaskStatus());
-         }else{
-             System.out.println("Задачи с таким id не существует");
-         }
+        if (taskList != null && taskList.get(newTask.getId())!=null) {
+            Task task = taskList.get(newTask.getId());
+            task.setName(newTask.getName());
+            task.setDescription(newTask.getDescription());
+            task.setTaskStatus(newTask.getTaskStatus());
+        }else{
+            System.out.println("Задачи с таким id не существует");
+        }
     }
 
 
@@ -90,9 +91,9 @@ public class InMemoryTaskManager implements TaskManager {
             }
             epicStatusControl(subTask.getParentEpicId());
         }
-    else{
-                System.out.println("Подзадачи с таким id не существует");
-            }
+        else{
+            System.out.println("Подзадачи с таким id не существует");
+        }
     }
 
     protected void addSubTaskToEpic(SubTask newSubTask) {
@@ -111,20 +112,20 @@ public class InMemoryTaskManager implements TaskManager {
     ////////////// epicStatusControl ///////////
 
     protected void epicStatusControl(Integer epicId) {
-       Integer newTaskCount = 0;
-       Integer doneTaskCount = 0;
+        Integer newTaskCount = 0;
+        Integer doneTaskCount = 0;
         Epic epic= epicList.get(epicId);
         ArrayList<Integer> tasks = epic.getSubTasksList();
         if(!tasks.isEmpty()){
             for(Integer subTaskId: tasks){
-               TaskStatus status = subTaskList.get(subTaskId).getTaskStatus();
-               if(status==TaskStatus.NEW){
-                   newTaskCount++;
-               }else if (status==TaskStatus.DONE){
-                   doneTaskCount++;
+                TaskStatus status = subTaskList.get(subTaskId).getTaskStatus();
+                if(status==TaskStatus.NEW){
+                    newTaskCount++;
+                }else if (status==TaskStatus.DONE){
+                    doneTaskCount++;
                 }
 
-        }
+            }
         }
         if(newTaskCount==epic.getSubTasksList().size()){
             epic.setTaskStatus(TaskStatus.NEW);
@@ -133,11 +134,69 @@ public class InMemoryTaskManager implements TaskManager {
         }else{
             epic.setTaskStatus(TaskStatus.IN_PROGRESS);
         }
+        epicDurationControl(epic.getId());
     }
 
-   //////////// remove ////////////
-   @Override
-   public void removeTask(Integer id){
+    protected void epicDurationControl(Integer epicId) {
+        System.out.println("здесь будет копилка эпичных дюрэйшенов");
+        Duration epicDuration = Duration.ofMinutes(0);
+        Epic epic= epicList.get(epicId);
+        ArrayList<Integer> tasks = epic.getSubTasksList();
+        if(!tasks.isEmpty()){
+            System.out.println("копилка эпичных дюрэйшенов внутри условия");
+            for(Integer subTaskId: tasks){
+                Duration taskDuration = subTaskList.get(subTaskId).getTaskDuration();
+                System.out.println("копилка эпичных дюрэйшенов taskDuration " + taskDuration.toMinutes());
+                epicDuration = epicDuration.plus(taskDuration);
+                System.out.println("копилка эпичных дюрэйшенов epicDuration после суммирования " + epicDuration.toMinutes());
+            }
+        }
+        epic.setTaskDuration(epicDuration);
+            }
+
+
+
+    public void getPrioritizedTasks(){
+        System.out.println("здесь будет сортировка");
+        ArrayList<Task> allTasksList = new ArrayList<>();
+        if (taskList != null&&!taskList.isEmpty()){
+            for(Task task: taskList.values()){
+                if (task.getStartTime()!=null) {
+                    allTasksList.add(task);
+                }
+            }
+        }
+        if (epicList != null&&!epicList.isEmpty()){
+            for(Epic epic: epicList.values()){
+                if(epic.getSubTasksList().size() != 0){
+                    System.out.println("длина списка сабтасок " + epic.getSubTasksList().size());
+                    if (epic.getStartTime()!=null){
+                        allTasksList.add(epic);
+                    }
+                }
+            }
+        }
+        if (subTaskList != null&&!subTaskList.isEmpty()){
+            for(SubTask subTask: subTaskList.values()){
+                if (subTask.getStartTime()!=null) {
+                    allTasksList.add(subTask);
+                }
+            }
+        }
+        else{
+            System.out.println("В системе нет зарегистрированных задач");
+        }
+
+        allTasksList.sort((Task e1, Task e2) -> e1.getStartTime().compareTo(e2.getStartTime()));
+        System.out.println("Max:" + allTasksList.get(allTasksList.size() - 1));
+        System.out.println("Min:" + allTasksList.get(0));
+        allTasksList.forEach(e -> System.out.println(e));
+
+    }
+
+    //////////// remove ////////////
+    @Override
+    public void removeTask(Integer id){
         System.out.println("removeTask");
         if (taskList != null && taskList.get(id)!=null){
             taskList.remove(id);
@@ -216,6 +275,44 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public void getTasks(){
+        if (taskList != null&&!taskList.isEmpty()){
+            for(Task task: taskList.values()){
+                System.out.println(task.toString());
+            }
+        }
+
+        else{
+            System.out.println("В системе нет зарегистрированных задач");
+        }
+    }
+
+    public void getEpics(){
+
+        if (epicList != null&&!epicList.isEmpty()){
+            System.out.println("Все задачи с типом Tasks.Epic:");
+            for(Epic epic: epicList.values()){
+                System.out.println(epic.toString());
+            }
+        }
+        else{
+            System.out.println("В системе нет зарегистрированных задач");
+        }
+    }
+
+    public void getSubTasks(){
+
+        if (subTaskList != null&&!subTaskList.isEmpty()){
+            System.out.println("Все задачи с типом Tasks.SubTask:");
+            for(SubTask subTask: subTaskList.values()){
+                System.out.println(subTask.toString());
+            }
+        }
+        else{
+            System.out.println("В системе нет зарегистрированных задач");
+        }
+    }
+
     @Override
     public Task getTaskById(Integer id){
         if (taskList != null && taskList.get(id)!=null){
@@ -270,20 +367,20 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public HashMap<Integer, Task> getTaskList() {
+    public HashMap<Integer, Task> getTaskHashMap() {
         return taskList;
     }
 
     public Task getTask(Integer id) {
 
-            if(taskList.containsKey(id)){
-                return taskList.get(id);
-            }else{
-                return null;
-            }
+        if(taskList.containsKey(id)){
+            return taskList.get(id);
+        }else{
+            return null;
+        }
     }
 
-    public HashMap<Integer, Epic> getEpicList() {
+    public HashMap<Integer, Epic> getEpicHashMap() {
         return epicList;
     }
 
@@ -310,3 +407,4 @@ public class InMemoryTaskManager implements TaskManager {
 
     }
 }
+

@@ -2,6 +2,8 @@ package tasks;
 
 import managers.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class SubTask extends Task {
@@ -16,6 +18,11 @@ public class SubTask extends Task {
         this.parentEpicId = parentEpicId;
     }
 
+    public SubTask(String name, String description, Duration duration, LocalDateTime startTime , Integer parentEpicId) {
+        super(name, description, duration, startTime);
+        this.parentEpicId = parentEpicId;
+    }
+
     public Integer getParentEpicId() {
         return parentEpicId;
     }
@@ -27,7 +34,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return id + "," + TaskType.SUBTASK + "," + name + "," + taskStatus + "," + description + "," + parentEpicId;
+        return id + "," + TaskType.SUBTASK + "," + name + "," + taskStatus + "," + description + "," + parentEpicId + "," + duration.toMinutes();
     }
 
     public void setStatus(TaskStatus status){

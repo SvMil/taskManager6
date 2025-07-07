@@ -2,10 +2,12 @@ package tasks;
 
 import managers.TaskType;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic  extends Task {
     private ArrayList<Integer> subTasksList;
+    LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -26,7 +28,20 @@ public class Epic  extends Task {
         return id + "," + TaskType.EPIC + "," + name + "," + taskStatus + "," + description;
     }
 
+    public String toStringDate() {
+        return id + "," + TaskType.EPIC + "," + name + "," + taskStatus + "," + description+ "," + duration.toMinutes() + "," + startTime;
+    }
+
+
     public void setSubTasksList(ArrayList<Integer> subTasksList) {
         this.subTasksList = subTasksList;
+    }
+
+    public LocalDateTime getEndTime(){
+        return endTime;
+    }
+
+    public void endTime(LocalDateTime endTime){
+        this.endTime= endTime;
     }
 }
