@@ -4,6 +4,7 @@ import managers.TaskType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import static java.time.Duration.ofMinutes;
@@ -15,6 +16,8 @@ public class Task {
     Duration duration = Duration.ZERO;
     //LocalDateTime startTime = LocalDateTime.of(2222, 2, 2, 2, 2);
     LocalDateTime startTime;
+    protected static DateTimeFormatter taskDateformatter = DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm");
+
 
 
 
@@ -45,22 +48,47 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public Task(Integer id, String name, TaskStatus taskStatus, String description, Duration duration, LocalDateTime startTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+
 
 
     public Task(String name, String description, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
+        this.taskStatus = TaskStatus.NEW;
         this.duration = duration;
         this.startTime = startTime;
     }
 
     @Override
     public String toString() {
-        return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description;
+        if(startTime!=null){
+            return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description + "," + duration.toMinutes() + "," + startTime.format(taskDateformatter);
+
+        }else{
+            return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description;
+
+
+        }
     }
 
     public String toStringDate() {
-        return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description + "," + duration.toMinutes() + "," + startTime;
+        if(startTime!=null){
+            return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description + "," + duration.toMinutes() + "," + startTime.format(taskDateformatter);
+
+        }else{
+            return id + "," + TaskType.TASK + "," + name + "," + taskStatus + "," + description;
+
+
+        }
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
@@ -105,6 +133,10 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    public static DateTimeFormatter getTaskDateformatter(){
+        return taskDateformatter;
     }
 
     @Override

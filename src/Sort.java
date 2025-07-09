@@ -37,11 +37,20 @@ public class Sort {
 
        inMemoryTaskManager.getPrioritizedTasks();
         SubTask subtask1 = new SubTask("Subtask1",
-                "Написать что то", duration1,date1.minusDays(3), epic.getId());
+                "Написать что то", epic.getId(), duration1.plusHours(3),date1.minusDays(3));
         inMemoryTaskManager.createSubTask(subtask1);
         SubTask subtask2 = new SubTask("Subtask2",
-                "Написать что то", duration1,date1.minusDays(3), epic.getId());
+                "Написать что то", epic.getId(), duration1,date1.minusDays(3).plusHours(1));
         inMemoryTaskManager.createSubTask(subtask2);
+
+        SubTask subtask5 = new SubTask("Subtask5",
+                "Написать что то", epic.getId(), duration1,date1.minusDays(8));
+        inMemoryTaskManager.createSubTask(subtask5);
+
+        SubTask subtask6 = new SubTask("Subtask6",
+                "Написать что то", epic.getId(), duration1.plusDays(2),date1.minusDays(8));
+        inMemoryTaskManager.createSubTask(subtask6);
+
         SubTask subtask3 = new SubTask("Subtask3",
                 "Написать что то", epic.getId());
         inMemoryTaskManager.createSubTask(subtask3);
@@ -49,6 +58,16 @@ public class Sort {
 
       // inMemoryTaskManager.getSubTasks();
      //   inMemoryTaskManager.getEpics();
+        inMemoryTaskManager.epicStartTimeControl(epic);
+        System.out.println("-----------------------------");
+        inMemoryTaskManager.epicEndTimeControl(epic);
+
+        Task task5 = new Task("Task 5", "Нужно сделать", duration1.plusDays(1), date1);
+        inMemoryTaskManager.newCreateTask(task5);
+
+        Task task6 = new Task("Task 6", "Нужно сделать", duration1, date1.minusDays(12));
+        inMemoryTaskManager.newCreateTask(task6);
+
 
     }
 }
