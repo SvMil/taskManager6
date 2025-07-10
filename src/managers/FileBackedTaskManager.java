@@ -142,18 +142,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         saveToFile();
     }
 
-    public static void copySourceFile(String sourceFile, String destFile){
 
-        Path sourcePath = Paths.get(sourceFile);
-        Path destPath = Paths.get(destFile);
-
-        try {
-            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File is copied successful!");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static ArrayList<String> readFromFile(String fileName) {
         System.out.println("чтение из файла");
@@ -215,6 +204,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void saveToFile() {
         try (Writer fileWriter = new FileWriter(fileName)) {
+            fileWriter.write("id,type,name,description,status,epic\n");
             for (Map.Entry<Integer,TaskType> entry : generalList.entrySet()) {
                 Integer id = entry.getKey();
                 TaskType taskType = entry.getValue();

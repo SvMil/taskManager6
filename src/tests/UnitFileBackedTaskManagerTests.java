@@ -46,7 +46,7 @@ class UnitFileBackedTaskManagerTests {
     void loadFromFile() {
         ArrayList<String> firstManagerList = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
 
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName(),"newManagerFile.csv");
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName());
         fileBackedTaskManager2.getAllTasks();
         ArrayList<String> secondManagerList = FileBackedTaskManager.readFromFile(fileBackedTaskManager2.getFileName());
         assertTrue(firstManagerList.equals(secondManagerList));
@@ -59,23 +59,25 @@ class UnitFileBackedTaskManagerTests {
         fileBackedTaskManager.createTask(task2);
         ArrayList<String> managerTasksList2 = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
         assertFalse(managerTasksList1.equals(managerTasksList2));
+        assertEquals(managerTasksList1.size(),6);
+        assertEquals(managerTasksList2.size(),7);
         fileBackedTaskManager.getAllTasks();
     }
 
     @Test
     void addTaskToSourseFileCheskDest() {
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName(),"newManagerFile.csv");
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName());
         fileBackedTaskManager2.getAllTasks();
         Task task2 = new Task("Задача 2", "Нужно сделать");
         fileBackedTaskManager.createTask(task2);
         ArrayList<String> firstManagerList = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
         ArrayList<String> secondManagerList = FileBackedTaskManager.readFromFile(fileBackedTaskManager2.getFileName());
-        assertFalse(firstManagerList.equals(secondManagerList));
+        assertTrue(firstManagerList.equals(secondManagerList));
     }
 
     @Test
     void addTaskToDestFile() {
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName(),"newManagerFile.csv");
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName());
         fileBackedTaskManager2.getAllTasks();
         ArrayList<String> firstManagerList = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
         ArrayList<String> secondManagerList = FileBackedTaskManager.readFromFile(fileBackedTaskManager2.getFileName());
@@ -84,9 +86,13 @@ class UnitFileBackedTaskManagerTests {
         fileBackedTaskManager2.createTask(task2);
         ArrayList<String> firstManagerList2 = FileBackedTaskManager.readFromFile(fileBackedTaskManager.getFileName());
         ArrayList<String> secondManagerList2 = FileBackedTaskManager.readFromFile(fileBackedTaskManager2.getFileName());
-        assertFalse(firstManagerList2.equals(secondManagerList2));
-        assertTrue(firstManagerList.equals(firstManagerList2));
+        assertTrue(firstManagerList2.equals(secondManagerList2));
+        assertFalse(firstManagerList.equals(firstManagerList2));
         assertFalse(secondManagerList.equals(secondManagerList2));
+        assertEquals(firstManagerList.size(),6);
+        assertEquals(firstManagerList2.size(),7);
+        assertEquals(secondManagerList.size(),6);
+        assertEquals(secondManagerList2.size(),7);
         fileBackedTaskManager2.getAllTasks();
     }
 
