@@ -110,7 +110,7 @@ class UnitFileBackedTaskManagerTests {
         SubTask subtask2 = new SubTask("Subtask2 создания",
                 "Написать что то", epic3.getId(),duration1,date1.minusDays(4));
         fileBackedTaskManager.createSubTask(subtask2);
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName(),"newManagerFile.csv");
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName());
 
     }
 }

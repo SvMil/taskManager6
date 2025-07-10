@@ -24,26 +24,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static void main(String[] args) {
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("filewriterall.csv");
-        /*Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
-        fileBackedTaskManager.createEpic(epic1);
 
-        Task task1 = new Task("Задача 1", "Нужно сделать");
-        fileBackedTaskManager.createTask(task1);
-
-        SubTask subtask1 = new SubTask("Subtask1 создания",
-                "Написать что то", epic1.getId());
-        fileBackedTaskManager.createSubTask(subtask1);
-        SubTask subtask2 = new SubTask("Subtask2 создания",
-                "Написать что то", epic1.getId());
-        fileBackedTaskManager.createSubTask(subtask2);
-
-        Epic epic2 = new Epic("Эпик 2", "Нужно сделать");
-        fileBackedTaskManager.createEpic(epic2);
-
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName,"newManagerFile.csv");
-        fileBackedTaskManager.getAllTasks();
-
-         */
         LocalDateTime date1 = LocalDateTime.now();
         Duration duration1 = Duration.ofMinutes(4);
 
@@ -75,7 +56,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 "Написать что то", epic.getId());
         fileBackedTaskManager.createSubTask(subtask3);
         fileBackedTaskManager.getPrioritizedTasks();
-        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName,"newManagerFile.csv");
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName);
 
 
     }
@@ -166,15 +147,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return readAllFromFile;
     }
 
-    public static FileBackedTaskManager loadFromFile(String sourceFile, String newManagerFile) {
+    public static FileBackedTaskManager loadFromFile(String sourceFile) {
         System.out.println("создать FileBackedTaskManager загрузкой из файла");
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm");
-        //copySourceFile(sourceFile, newManagerFile);
         ArrayList<String> readAllFromFile = readFromFile(sourceFile);
-        FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(newManagerFile);
+        FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(sourceFile);
         for (String str : readAllFromFile) {
             String[] split = str.split(",");
-            //System.out.println("loadFromFile split[1] " + split[1]);
             if (split[1].equals("EPIC")) {
                 Epic epic = new Epic(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
                 fileBackedTaskManager2.createEpic(epic);
