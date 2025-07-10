@@ -318,6 +318,7 @@ public void removeTask(Integer id) {
         System.out.println("Задачи с таким id не существует");
     }
     inMemoryHistoryManager.removeTaskFromHistory(id);
+    setPrioritizedTasks();
 }
 
 protected void removeSubTaskFromEpic(SubTask newSubTask) {
@@ -329,6 +330,7 @@ protected void removeSubTaskFromEpic(SubTask newSubTask) {
     }
     epicSubtaskList.remove(newSubTask.getId());
     epicList.get(newSubTask.getParentEpicId()).setSubTasksList(epicSubtaskList);
+    setPrioritizedTasks();
 }
 
 @Override
@@ -343,6 +345,7 @@ public void removeAllTasks() {
         subTaskList.clear();
     }
     taskCounter = 1;
+    setPrioritizedTasks();
 }
 
 //////////// get ////////////
