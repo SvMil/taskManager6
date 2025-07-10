@@ -7,6 +7,8 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,9 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class UnitFileBackedTaskManagerTests {
 
     static FileBackedTaskManager fileBackedTaskManager;
+    static LocalDateTime date1;
+    static Duration duration1;
 
     @BeforeEach
     public void setClassObjects(){
+        date1 = LocalDateTime.now();
+        duration1 = Duration.ofMinutes(4);
         fileBackedTaskManager = new FileBackedTaskManager("filewriterall.csv");
         Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
         fileBackedTaskManager.createEpic(epic1);
@@ -88,5 +94,23 @@ class UnitFileBackedTaskManagerTests {
         assertEquals(secondManagerList.size(),6);
         assertEquals(secondManagerList2.size(),7);
         fileBackedTaskManager2.getAllTasks();
+    }
+
+    @Test
+    void taskDuration(){
+        Epic epic3 = new Epic("Эпик 3", "Нужно сделать");
+        fileBackedTaskManager.createEpic(epic3);
+
+        Task task5 = new Task("Задача 5", "Нужно сделать",duration1,date1);
+        fileBackedTaskManager.createTask(task5);
+
+        SubTask subtask1 = new SubTask("Subtask1 создания",
+                "Написать что то", epic3.getId(),duration1,date1.minusDays(2));
+        fileBackedTaskManager.createSubTask(subtask1);
+        SubTask subtask2 = new SubTask("Subtask2 создания",
+                "Написать что то", epic3.getId(),duration1,date1.minusDays(4));
+        fileBackedTaskManager.createSubTask(subtask2);
+        FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.getFileName());
+
     }
 }

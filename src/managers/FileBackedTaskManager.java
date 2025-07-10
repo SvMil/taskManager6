@@ -8,37 +8,56 @@ import tasks.TaskStatus;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private String fileName;
-    private HashMap<Integer, TaskType> generalList = new HashMap<>();
+    protected String fileName;
+    protected HashMap<Integer, TaskType> generalList = new HashMap<>();
     private Integer generalCounter  = 1;
 
 
     public static void main(String[] args) {
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("filewriterall.csv");
-        Epic epic1 = new Epic("Эпик 1", "Нужно сделать");
-        fileBackedTaskManager.createEpic(epic1);
 
-        Task task1 = new Task("Задача 1", "Нужно сделать");
+        LocalDateTime date1 = LocalDateTime.now();
+        Duration duration1 = Duration.ofMinutes(4);
+
+        Task task1 = new Task("Task 1", "Нужно сделать", duration1, date1);
         fileBackedTaskManager.createTask(task1);
 
-        SubTask subtask1 = new SubTask("Subtask1 создания",
-                "Написать что то", epic1.getId());
+        Task task2 = new Task("Task 2", "Нужно сделать", duration1, date1.minusDays(2));
+        fileBackedTaskManager.createTask(task2);
+
+        Task task3 = new Task("Task 3", "Нужно сделать", duration1, date1.minusDays(1));
+        fileBackedTaskManager.createTask(task3);
+
+        Epic epic = new Epic("epic 1", "Нужно сделать");
+        fileBackedTaskManager.createEpic(epic);
+
+
+
+        fileBackedTaskManager.getPrioritizedTasks();
+        SubTask subtask1 = new SubTask("Subtask1",
+                "Написать что то", epic.getId(), duration1.plusHours(3),date1.minusDays(3));
         fileBackedTaskManager.createSubTask(subtask1);
-        SubTask subtask2 = new SubTask("Subtask2 создания",
-                "Написать что то", epic1.getId());
-        fileBackedTaskManager.createSubTask(subtask2);
 
-        Epic epic2 = new Epic("Эпик 2", "Нужно сделать");
-        fileBackedTaskManager.createEpic(epic2);
 
+        SubTask subtask5 = new SubTask("Subtask5",
+                "Написать что то", epic.getId(), duration1,date1.minusDays(8));
+        fileBackedTaskManager.createSubTask(subtask5);
+
+        SubTask subtask3 = new SubTask("Subtask3",
+                "Написать что то", epic.getId());
+        fileBackedTaskManager.createSubTask(subtask3);
+        fileBackedTaskManager.getPrioritizedTasks();
         FileBackedTaskManager fileBackedTaskManager2 = fileBackedTaskManager.loadFromFile(fileBackedTaskManager.fileName);
-        fileBackedTaskManager.getAllTasks();
+
 
     }
 
@@ -104,6 +123,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         saveToFile();
     }
 
+
+
     public static ArrayList<String> readFromFile(String fileName) {
         System.out.println("чтение из файла");
         ArrayList<String> readAllFromFile = new ArrayList<String>();
@@ -128,6 +149,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(String sourceFile) {
         System.out.println("создать FileBackedTaskManager загрузкой из файла");
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm");
         ArrayList<String> readAllFromFile = readFromFile(sourceFile);
         FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager(sourceFile);
         for (String str : readAllFromFile) {
@@ -136,10 +158,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 Epic epic = new Epic(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
                 fileBackedTaskManager2.createEpic(epic);
             } if (split[1].equals("TASK")) {
-                Task task = new Task(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
-                fileBackedTaskManager2.createTask(task);
+                Task task;
+                if(split.length>5) {
+                    task = new Task(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4], Duration.ofMinutes(Integer.parseInt(split[5])), LocalDateTime.parse(split[6],Task.getTaskDateformatter()));
+                }else {
+                    task = new Task(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4]);
+
+                }
+                 fileBackedTaskManager2.createTask(task);
+
             } if (split[1].equals("SUBTASK")) {
-                SubTask subTask = new SubTask(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4], Integer.parseInt(split[5]));
+                SubTask subTask;
+                if(split.length>6) {
+                    subTask = new SubTask(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4], Integer.parseInt(split[5]),Duration.ofMinutes(Integer.parseInt(split[6])), LocalDateTime.parse(split[7], Task.getTaskDateformatter()));
+                }else {
+                    subTask = new SubTask(Integer.parseInt(split[0]), split[2], TaskStatus.valueOf(split[3]), split[4], Integer.parseInt(split[5]));
+
+                }
                 fileBackedTaskManager2.createSubTask(subTask);
             }
         }
@@ -155,13 +190,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 switch (taskType.toString()){
                     case "TASK":
-                        fileWriter.write(getTaskById(id).toString() + "\n");
+                        fileWriter.write(getTaskById(id).toStringDate() + "\n");
                         break;
                     case "EPIC":
-                        fileWriter.write(getEpicById(id).toString() + "\n");
+                        fileWriter.write(getEpicById(id).toStringDate() + "\n");
                         break;
                     case "SUBTASK":
-                        fileWriter.write(getSubTaskById(id).toString() + "\n");
+                        fileWriter.write(getSubTaskById(id).toStringDate() + "\n");
                         break;
                 }
             }
